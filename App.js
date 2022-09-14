@@ -1,37 +1,47 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useRef, useState } from 'react';
-import { StyleSheet, Text, View, Button, Alert, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button, Alert, TextInput ,FlatList } from 'react-native';
 
 export default function App() {
   const [numb, setNumb] = useState(0);
   const [numbKaks, setNumbKaks] = useState(0);
   const [tulos, setTulos] = useState(0);
   const initialFocus = useRef(null);
+  const [data, setData] = useState([]);
+  
 
   const calculate = operator => {
     const [num1, num2] = [Number(numb), Number(numbKaks)];
 
+    let tulos = 0;
+
     switch (operator) {
       case '+':
+        tulos = num1+num2;
         setTulos(num1+num2)
         break;
 
       case '-':
+        tulos = num1-num2;
         setTulos(num1-num2)
         break;
     }
+
+    const text = `${num1} ${operator} ${num2} = ${tulos}`
+    setData([...data, { key: text }])
     setNumb('');
     setNumbKaks('');
     initialFocus.current.focus();
   }
 
+  
+
+  console.log(tulos)
 
   return (
     <View style={styles.conatiner}>
 
-      <View >
-        <Text>Tulos: {tulos}</Text>
-      </View>
+      <Text>Tulos: {tulos}</Text>
       
       <View>
 
@@ -64,7 +74,18 @@ export default function App() {
               onPress={() => calculate('-')}
             />
         </View>
-        
+      </View>
+
+      <View style={styles.table}>
+
+        <FlatList
+          ListHeaderComponent={<Text>Historia:</Text>}
+          data={data}
+          renderItem={({ item }) => 
+            <Text>{item.key}</Text>
+          }
+          keyExtractor={(item, index) => index.toString()}
+        />
       </View>
 
       <StatusBar style="auto" />
@@ -99,5 +120,12 @@ const styles = StyleSheet.create({
     borderColor: 'red',
     borderWidth: 2,
     margin: 10,
+  },
+
+  table: {
+    borderColor: 'pink',
+    borderWidth: 4,
+    margin: 35,
+    width: 210
   }
 });
