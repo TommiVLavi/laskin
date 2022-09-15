@@ -1,98 +1,27 @@
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 import { StatusBar } from 'expo-status-bar';
-import React, { useRef, useState } from 'react';
-import { StyleSheet, Text, View, Button, Alert, TextInput ,FlatList } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput ,FlatList } from 'react-native';
+
+import Calc from './Calculator'
+import Hist from './History'
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const [numb, setNumb] = useState(0);
-  const [numbKaks, setNumbKaks] = useState(0);
-  const [tulos, setTulos] = useState(0);
-  const initialFocus = useRef(null);
-  const [data, setData] = useState([]);
-  
-
-  const calculate = operator => {
-    const [num1, num2] = [Number(numb), Number(numbKaks)];
-
-    let tulos = 0;
-
-    switch (operator) {
-      case '+':
-        tulos = num1+num2;
-        setTulos(num1+num2)
-        break;
-
-      case '-':
-        tulos = num1-num2;
-        setTulos(num1-num2)
-        break;
-    }
-
-    const text = `${num1} ${operator} ${num2} = ${tulos}`
-    setData([...data, { key: text }])
-    setNumb('');
-    setNumbKaks('');
-    initialFocus.current.focus();
-  }
-
-  
-
-  console.log(tulos)
 
   return (
-    <View style={styles.conatiner}>
-
-      <Text>Tulos: {tulos}</Text>
-      
-      <View>
-
-        <TextInput style={styles.input} 
-        ref={initialFocus}
-        onChangeText={text => setNumb(text)} 
-        value={numb}
-        keyboardType='number-pad'
-        />
-
-        <TextInput style={styles.input} 
-        onChangeText={text => setNumbKaks(text)} 
-        value={numbKaks}
-        keyboardType='number-pad'
-        />
-
-      </View>
-
-
-      <View style={styles.operators}>
-        
-        <View style={styles.buttons}>
-          <Button title="Plussa" 
-              onPress={() => calculate('+')}
-            />
-        </View>
-          
-        <View style={styles.buttons}>
-          <Button title="Miinus" 
-              onPress={() => calculate('-')}
-            />
-        </View>
-      </View>
-
-      <View style={styles.table}>
-
-        <FlatList
-          ListHeaderComponent={<Text>Historia:</Text>}
-          data={data}
-          renderItem={({ item }) => 
-            <Text>{item.key}</Text>
-          }
-          keyExtractor={(item, index) => index.toString()}
-        />
-      </View>
-
-      <StatusBar style="auto" />
-
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name='Laskin' component={Calc} />
+        <Stack.Screen name='Historia' component={Hist} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   conatiner: {
